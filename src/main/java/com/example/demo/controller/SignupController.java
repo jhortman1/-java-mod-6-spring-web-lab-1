@@ -1,35 +1,58 @@
 package com.example.demo.controller;
 
+import com.example.demo.models.DTOs.SignupDTO;
 import com.example.demo.service.SignupService;
 import com.example.demo.models.Signup;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
 public class SignupController {
     @Autowired
     SignupService signupService;
+    @Autowired
+    ModelMapper modelMapper;
+
+    @GetMapping("/signup")
+    public List<SignupDTO> readSignups(){
+        return signupService.getSignups().stream().map(signup -> modelMapper.map(signup, SignupDTO.class))
+                .collect(Collectors.toList());
+    }
+    @GetMapping("/signup/{signupId}")
+    public ResponseEntity<SignupDTO> readSignup(@PathVariable(value = "signupId")Integer id){
+        Signup signup = signupService.getSignup(id);
+        SignupDTO signupResponse = modelMapper.map(signup,SignupDTO.class);
+        return ResponseEntity.ok().body(signupResponse);
+    }
+
     @PostMapping("/signup")
-    public ResponseEntity<Signup> createCamper(@Valid @RequestBody Signup signup)
+    public ResponseEntity<SignupDTO> createSignup(@Valid @RequestBody SignupDTO signup)
     {
-        Optional<Signup> newSignup = Optional.ofNullable(signupService.createSignup(signup));
-        if(newSignup.isPresent())
-        {
-            return ResponseEntity.ok(newSignup.get());
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "errors: [validation errors]");
-        }
+        Signup signupRequest = modelMapper.map(signup,Signup.class);
+        Signup newSignup = signupService.createSignup(signupRequest);
+        SignupDTO signupResponse = modelMapper.map(newSignup,SignupDTO.class);
+        return new ResponseEntity<>(signupResponse,HttpStatus.CREATED);
+    }
+    @PutMapping("/signup/{signupId}")
+    public ResponseEntity<SignupDTO> updateSignup (@PathVariable(value = "signupId")Integer id,@RequestBody SignupDTO signupDTO)
+    {
+        Signup signupRequest = modelMapper.map(signupDTO,Signup.class);
+        Signup newSignup = signupService.updateSignup(id,signupRequest);
+        SignupDTO signupResponse = modelMapper.map(newSignup,SignupDTO.class);
+        return new ResponseEntity<>(signupResponse,HttpStatus.CREATED);
+    }
+    @DeleteMapping("signup/{signupId}")
+    public void deleteSignup(@PathVariable(name = "id") Integer id)
+    {
+        signupService.deleteSignup(id);
     }
 }
 

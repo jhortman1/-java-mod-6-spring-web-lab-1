@@ -2,9 +2,13 @@ package com.example.demo.service;
 
 import com.example.demo.repository.SignupRepository;
 import com.example.demo.models.Signup;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 @Service
 public class SignupService {
@@ -12,6 +16,8 @@ public class SignupService {
     SignupRepository signupRepository;
 
     public Signup createSignup(Signup signup) {
+        signup.setCreated_at(LocalDateTime.now());
+        signup.setUpdated_at(LocalDateTime.now());
         return signupRepository.save(signup);
     }
 
@@ -20,17 +26,18 @@ public class SignupService {
     }
 
     public Signup getSignup(Integer id) {
-        return signupRepository.findById(id).get();
+        return signupRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     public Signup updateSignup(Integer id, Signup signupData) {
-        Signup signup = signupRepository.findById(id).get();
+        Signup signup = signupRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
         signup.setTime(signup.getTime());
-        signup.setUpdated_at(signup.getUpdated_at());
+        signup.setUpdated_at(LocalDateTime.now());
         return signupRepository.save(signup);
     }
 
     public void deleteSignup(Integer id) {
-        signupRepository.deleteById(id);
+        Signup toBeDeletedSignup = signupRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        signupRepository.deleteById(toBeDeletedSignup.getId());
     }
 }

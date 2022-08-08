@@ -1,41 +1,57 @@
 package com.example.demo.controller;
 
+import com.example.demo.models.DTOs.ActivityDTO;
 import com.example.demo.service.ActivityService;
 import com.example.demo.models.Activity;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
 public class ActivityController {
     @Autowired
     ActivityService activityService;
+    @Autowired
+    ModelMapper modelMapper;
 
     @GetMapping("/activities")
-    public List<Activity> readActivity() {
-        return activityService.getActivities();
+    public List<ActivityDTO> readActivities(){
+        return activityService.getActivities().stream().map(activity -> modelMapper.map(activity,ActivityDTO.class))
+                .collect(Collectors.toList());
     }
-    @DeleteMapping("/activities/{Id}")
-    public void deleteActivity(@PathVariable(value = "Id") Integer id) {
-        Optional<Activity>activity= Optional.ofNullable(activityService.getActivity(id));
-        if(activity.isPresent())
-        {
-            activityService.deleteActivity(activity.get().getId());
-        }
-        else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"error: Activity not found");
-        }
+
+    @GetMapping("/activities/{activityId}")
+    public ResponseEntity<ActivityDTO> readActivity(@PathVariable(value = "activityId")Integer id){
+        Activity activity = activityService.getActivity(id);
+        ActivityDTO activityResponse = modelMapper.map(activity,ActivityDTO.class);
+        return ResponseEntity.ok().body(activityResponse);
     }
-    @PostMapping("/activity")
-    public ResponseEntity<Activity> createMember(@Valid @RequestBody Activity activity) {
-        Activity newActivity = activityService.createActivity(activity);
-        return ResponseEntity.ok(newActivity);
+
+    @PostMapping("/activities")
+    public ResponseEntity<ActivityDTO> createActivity(@Valid @RequestBody ActivityDTO activity)
+    {
+        Activity activityRequest = modelMapper.map(activity,Activity.class);
+        Activity newActivity = activityService.createActivity(activityRequest);
+        ActivityDTO activityResponse = modelMapper.map(newActivity,ActivityDTO.class);
+        return new ResponseEntity<>(activityResponse,HttpStatus.CREATED);
+    }
+    @PutMapping("/activities/{activityId}")
+    public ResponseEntity<ActivityDTO> updateActivity (@PathVariable(value = "activityId")Integer id,@RequestBody ActivityDTO activityDTO)
+    {
+        Activity activityRequest = modelMapper.map(activityDTO,Activity.class);
+        Activity newActivity = activityService.updateActivity(id,activityRequest);
+        ActivityDTO activityResponse = modelMapper.map(newActivity,ActivityDTO.class);
+        return new ResponseEntity<>(activityResponse,HttpStatus.ACCEPTED);
+    }
+    @DeleteMapping("activities/{activityId}")
+    public void deleteActivity(@PathVariable(name = "id") Integer id)
+    {
+        activityService.deleteActivity(id);
     }
 }

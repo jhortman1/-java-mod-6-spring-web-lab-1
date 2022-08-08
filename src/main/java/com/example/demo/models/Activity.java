@@ -28,7 +28,7 @@ public class Activity {
     private int difficulity;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
-    @OneToMany(mappedBy = "activity",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "activity",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Signup> signups = new ArrayList<>();
 
 }

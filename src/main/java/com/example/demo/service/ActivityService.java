@@ -13,33 +13,33 @@ import java.util.List;
 @Service
 public class ActivityService {
     @Autowired
-    ActivityRepository ActivityRepository;
+    ActivityRepository activityRepository;
 
     public Activity createActivity(Activity activity) {
         activity.setCreated_at(LocalDateTime.now());
         activity.setUpdated_at(LocalDateTime.now());
-        return ActivityRepository.save(activity);
+        return activityRepository.save(activity);
     }
 
     public List<Activity> getActivities() {
-        return ActivityRepository.findAll();
+        return activityRepository.findAll();
     }
 
     public Activity getActivity(Integer id) {
-        return ActivityRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return activityRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"error: Activity not found"));
     }
 
     public Activity updateActivity(Integer id, Activity activityData) {
-        Activity activity = ActivityRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Activity activity = activityRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"error: Activity not found"));
         activity.setName(activityData.getName());
         activity.setDifficulity(activityData.getDifficulity());
         activity.setUpdated_at(LocalDateTime.now());
-        return ActivityRepository.save(activity);
+        return activityRepository.save(activity);
     }
 
     public void deleteActivity(Integer id) {
-        Activity toBeDeletedActivity = ActivityRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
-        ActivityRepository.deleteById(toBeDeletedActivity.getId());
+        Activity toBeDeletedActivity = activityRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"error: Activity not found"));
+        activityRepository.deleteById(toBeDeletedActivity.getId());
     }
 
 }

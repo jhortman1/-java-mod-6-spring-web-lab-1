@@ -1,5 +1,4 @@
-package com.example.demo.models.DTOs;
-import com.example.demo.models.Signup;
+package com.example.demo.DTOs;
 import lombok.Data;
 
 import java.time.LocalDateTime;

@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.models.DTOs.CamperDTO;
+import com.example.demo.DTOs.CamperDTO;
 import com.example.demo.service.CamperService;
 import com.example.demo.models.Camper;
 import org.modelmapper.ModelMapper;
@@ -21,20 +21,20 @@ public class CamperController {
     @Autowired
     ModelMapper modelMapper;
 
-    @GetMapping("/campers")
+    @GetMapping("/getCampers")
     public List<CamperDTO> readCampers(){
         return camperService.getCampers().stream().map(camper -> modelMapper.map(camper,CamperDTO.class))
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/campers/{camperId}")
+    @GetMapping("/getCampers/{camperId}")
     public ResponseEntity<CamperDTO> readCamper(@PathVariable(value = "camperId")Integer id){
         Camper camper = camperService.getCamper(id);
         CamperDTO camperResponse = modelMapper.map(camper,CamperDTO.class);
         return ResponseEntity.ok().body(camperResponse);
     }
 
-    @PostMapping("/campers")
+    @PostMapping("/createCampers")
     public ResponseEntity<CamperDTO> createCamper(@Valid @RequestBody CamperDTO camper)
     {
         Camper camperRequest = modelMapper.map(camper,Camper.class);
@@ -42,7 +42,7 @@ public class CamperController {
         CamperDTO camperResponse = modelMapper.map(newCamper,CamperDTO.class);
         return new ResponseEntity<>(camperResponse,HttpStatus.CREATED);
     }
-    @PutMapping("/campers/{camperId}")
+    @PutMapping("/updateCampers/{camperId}")
     public ResponseEntity<CamperDTO> updateCamper (@PathVariable(value = "camperId")Integer id,@RequestBody CamperDTO camperDTO)
     {
         Camper camperRequest = modelMapper.map(camperDTO,Camper.class);
@@ -50,8 +50,8 @@ public class CamperController {
         CamperDTO camperResponse = modelMapper.map(newCamper,CamperDTO.class);
         return new ResponseEntity<>(camperResponse,HttpStatus.CREATED);
     }
-    @DeleteMapping("campers/{camperId}")
-    public void deleteCamper(@PathVariable(name = "id") Integer id)
+    @DeleteMapping("deleteCamper/{camperId}")
+    public void deleteCamper(@PathVariable(name = "camperId") Integer id)
     {
         camperService.deleteCamper(id);
     }

@@ -26,18 +26,18 @@ public class SignupService {
     }
 
     public Signup getSignup(Integer id) {
-        return signupRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return signupRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"error: Signup not found"));
     }
 
     public Signup updateSignup(Integer id, Signup signupData) {
-        Signup signup = signupRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Signup signup = signupRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"error: Signup not found"));
         signup.setTime(signup.getTime());
         signup.setUpdated_at(LocalDateTime.now());
         return signupRepository.save(signup);
     }
 
     public void deleteSignup(Integer id) {
-        Signup toBeDeletedSignup = signupRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Signup toBeDeletedSignup = signupRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"error: Signup not found"));
         signupRepository.deleteById(toBeDeletedSignup.getId());
     }
 }

@@ -25,11 +25,11 @@ public class CamperService {
     }
 
     public Camper getCamper(Integer id) {
-        return camperRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return camperRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"error: Camper not found"));
     }
 
     public Camper updateCamper(Integer id, Camper camperData) {
-        Camper camper = camperRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Camper camper = camperRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"error: Camper not found"));
         camper.setName(camperData.getName());
         camper.setAge(camperData.getAge());
         camper.setUpdated_at(LocalDateTime.now());
@@ -37,7 +37,7 @@ public class CamperService {
     }
 
     public void deleteCamper(Integer id) {
-        Camper toBeDeletedCamper = camperRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Camper toBeDeletedCamper = camperRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"error: Camper not found"));
         camperRepository.deleteById(toBeDeletedCamper.getId());
     }
 }

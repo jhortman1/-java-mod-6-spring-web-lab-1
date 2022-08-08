@@ -19,8 +19,6 @@ public class Signup {
     @Id
     @GeneratedValue
     private int id;
-//    private int camper_id;
-//    private int activity_id;
     @Min(value = 0)
     @Max(23)
     private int time;

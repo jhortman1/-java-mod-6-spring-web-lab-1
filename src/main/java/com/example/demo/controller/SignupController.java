@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.models.DTOs.SignupDTO;
+import com.example.demo.DTOs.SignupDTO;
 import com.example.demo.service.SignupService;
 import com.example.demo.models.Signup;
 import org.modelmapper.ModelMapper;
@@ -21,19 +21,19 @@ public class SignupController {
     @Autowired
     ModelMapper modelMapper;
 
-    @GetMapping("/signup")
+    @GetMapping("/getSignups")
     public List<SignupDTO> readSignups(){
         return signupService.getSignups().stream().map(signup -> modelMapper.map(signup, SignupDTO.class))
                 .collect(Collectors.toList());
     }
-    @GetMapping("/signup/{signupId}")
+    @GetMapping("/getSignup/{signupId}")
     public ResponseEntity<SignupDTO> readSignup(@PathVariable(value = "signupId")Integer id){
         Signup signup = signupService.getSignup(id);
         SignupDTO signupResponse = modelMapper.map(signup,SignupDTO.class);
         return ResponseEntity.ok().body(signupResponse);
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/creteSignup")
     public ResponseEntity<SignupDTO> createSignup(@Valid @RequestBody SignupDTO signup)
     {
         Signup signupRequest = modelMapper.map(signup,Signup.class);
@@ -41,7 +41,7 @@ public class SignupController {
         SignupDTO signupResponse = modelMapper.map(newSignup,SignupDTO.class);
         return new ResponseEntity<>(signupResponse,HttpStatus.CREATED);
     }
-    @PutMapping("/signup/{signupId}")
+    @PutMapping("/updateSignup/{signupId}")
     public ResponseEntity<SignupDTO> updateSignup (@PathVariable(value = "signupId")Integer id,@RequestBody SignupDTO signupDTO)
     {
         Signup signupRequest = modelMapper.map(signupDTO,Signup.class);
@@ -49,7 +49,7 @@ public class SignupController {
         SignupDTO signupResponse = modelMapper.map(newSignup,SignupDTO.class);
         return new ResponseEntity<>(signupResponse,HttpStatus.CREATED);
     }
-    @DeleteMapping("signup/{signupId}")
+    @DeleteMapping("deleteSignup/{signupId}")
     public void deleteSignup(@PathVariable(name = "id") Integer id)
     {
         signupService.deleteSignup(id);

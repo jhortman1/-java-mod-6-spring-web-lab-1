@@ -20,8 +20,8 @@ import java.util.List;
 @Entity
 public class Activity {
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @NotNull
     @NotBlank
     private String name;

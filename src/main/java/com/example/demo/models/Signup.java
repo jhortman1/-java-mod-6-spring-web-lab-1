@@ -17,14 +17,14 @@ import java.time.LocalDateTime;
 @Entity
 public class Signup {
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Min(value = 0)
     @Max(23)
     private int time;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
-    @ManyToOne
+   @ManyToOne
     private Activity activity;
     @ManyToOne
     private Camper camper;

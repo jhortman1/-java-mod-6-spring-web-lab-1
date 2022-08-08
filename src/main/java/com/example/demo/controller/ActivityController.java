@@ -27,7 +27,7 @@ public class ActivityController {
     }
 
     @GetMapping("/getActivity/{activityId}")
-    public ResponseEntity<ActivityDTO> readActivity(@PathVariable(value = "activityId")Integer id){
+    public ResponseEntity<ActivityDTO> readActivity(@PathVariable(value = "activityId")Long id){
         Activity activity = activityService.getActivity(id);
         ActivityDTO activityResponse = modelMapper.map(activity,ActivityDTO.class);
         return ResponseEntity.ok().body(activityResponse);
@@ -42,7 +42,7 @@ public class ActivityController {
         return new ResponseEntity<>(activityResponse,HttpStatus.CREATED);
     }
     @PutMapping("/updateActivities/{activityId}")
-    public ResponseEntity<ActivityDTO> updateActivity (@PathVariable(value = "activityId")Integer id,@RequestBody ActivityDTO activityDTO)
+    public ResponseEntity<ActivityDTO> updateActivity (@PathVariable(value = "activityId")Long id,@RequestBody ActivityDTO activityDTO)
     {
         Activity activityRequest = modelMapper.map(activityDTO,Activity.class);
         Activity newActivity = activityService.updateActivity(id,activityRequest);
@@ -50,8 +50,9 @@ public class ActivityController {
         return new ResponseEntity<>(activityResponse,HttpStatus.ACCEPTED);
     }
     @DeleteMapping("deleteActivity/{activityId}")
-    public void deleteActivity(@PathVariable(name = "activityId") Integer id)
+    public void deleteActivity(@PathVariable(name = "activityId") Long id)
     {
+
         activityService.deleteActivity(id);
     }
 }

@@ -33,19 +33,21 @@ public class DemoApplication {
 							 SignupRepository signupRepository) {
 		return (args) -> {
 			Activity archery = activityRepository
-					.save(new Activity(1, "Archery", 2, LocalDateTime.now(), LocalDateTime.now(), new ArrayList<>()));
+					.save(new Activity(1L, "Archery", 2, LocalDateTime.now(), LocalDateTime.now(), new ArrayList<>()));
 			Activity swimming = activityRepository
-					.save(new Activity(2, "Swimming", 3, LocalDateTime.now(), LocalDateTime.now(), new ArrayList<>()));
+					.save(new Activity(2L, "Swimming", 3, LocalDateTime.now(), LocalDateTime.now(), new ArrayList<>()));
 			Camper caitlin = camperRepository
-					.save(new Camper(1, "Caitlin", 8, LocalDateTime.now(), LocalDateTime.now(), new ArrayList<>()));
+					.save(new Camper(1L, "Caitlin", 8, LocalDateTime.now(), LocalDateTime.now(), new ArrayList<>()));
 			Camper lizzie = camperRepository
-					.save(new Camper(2, "Lizzie", 9, LocalDateTime.now(), LocalDateTime.now(), new ArrayList<>()));
+					.save(new Camper(2L, "Lizzie", 9, LocalDateTime.now(), LocalDateTime.now(), new ArrayList<>()));
 			Signup archerySignup = signupRepository
-					.save(new Signup(1, 9, LocalDateTime.now(), LocalDateTime.now(), archery, caitlin));
+					.save(new Signup(1L, 9, LocalDateTime.now(), LocalDateTime.now(), archery, caitlin));
 			Signup swimmingSignup = signupRepository
-					.save(new Signup(2, 10, LocalDateTime.now(), LocalDateTime.now(), swimming, caitlin));
+					.save(new Signup(2L, 10, LocalDateTime.now(), LocalDateTime.now(), swimming, caitlin));
 			archery.setSignups(List.of(archerySignup, swimmingSignup));
 			caitlin.setSignups(List.of(archerySignup, swimmingSignup));
+			activityRepository.save(archery);
+			camperRepository.save(caitlin);
 		};
 	}
 

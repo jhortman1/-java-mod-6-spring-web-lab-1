@@ -21,8 +21,8 @@ import java.util.List;
 @Entity
 public class Camper {
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @NotNull
     @NotBlank
     private String name;

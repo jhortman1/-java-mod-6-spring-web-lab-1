@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Data
 public class CamperDTO {
-    private int id;
+    private Long id;
     private String name;
     private int age;
     private LocalDateTime created_at;
